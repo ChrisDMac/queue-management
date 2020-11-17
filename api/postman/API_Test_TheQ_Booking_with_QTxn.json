@@ -11092,7 +11092,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "// Define the JSON Schema expected in response\nvar appointmentSchema = {\n    \"type\": \"object\", \n    \"properties\": {\n        \"appointment\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"appointment_id\": {\"type\": \"number\"},\n                \"checked_in_time\": {\"type\": [\"string\", \"null\"]},\n                \"citizen_name\": {\"type\": \"string\"},\n                \"comments\": {\"type\": \"string\"},\n                \"contact_information\": {\"type\": [\"string\", \"null\"]},\n                \"end_time\": {\"type\": \"string\"},\n                \"office\": {\"type\": \"number\"},\n                \"office_id\": {\"type\": \"number\"},\n                \"service_id\": {\"type\": \"number\"},\n                \"start_time\": {\"type\": \"string\"},\n                \"blackout_flag\": {\"type\": \"string\"},\n                \"citizen_id\": {\"type\": \"number\"},\n                \"online_flag\": {\"type\": \"boolean\"},\n                \"recurring_uuid\": {\"type\": [\"null\", \"string\"]},\n                \"service\": {\"type\": \"number\"}\n            },\n            \"required\": [\"appointment_id\", \"checked_in_time\", \"citizen_name\", \"comments\",\n                         \"contact_information\", \"end_time\", \"office\", \"office_id\", \"service_id\",\n                         \"start_time\", \"blackout_flag\", \"citizen_id\", \"online_flag\",\n                         \"recurring_uuid\", \"service\"],\n        },\n        \"errors\": {\"type\": [\"object\", \"string\"]}\n    },\n    \"required\": [\"appointment\", \"errors\"],\n};\n\n//Test to see if response schema is valid\npm.test(\"Validate Response Appointments Schema\", function(){\n    pm.expect(tv4.validate(jsonData, appointmentSchema)).to.be.true;\n});\n"
+							"raw": "// Define the JSON Schema expected in response\nvar appointmentSchema = {\n    \"type\": \"object\", \n    \"properties\": {\n        \"appointment\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"appointment_id\": {\"type\": \"number\"},\n                \"checked_in_time\": {\"type\": [\"string\", \"null\"]},\n                \"citizen_name\": {\"type\": \"string\"},\n                \"comments\": {\"type\": \"string\"},\n                \"contact_information\": {\"type\": [\"string\", \"null\"]},\n                \"end_time\": {\"type\": \"string\"},\n                \"office\": {\"type\": \"number\"},\n                \"office_id\": {\"type\": \"number\"},\n                \"service_id\": {\"type\": [\"null\", \"number\"]},\n                \"start_time\": {\"type\": \"string\"},\n                \"blackout_flag\": {\"type\": \"string\"},\n                \"citizen_id\": {\"type\": \"number\"},\n                \"online_flag\": {\"type\": \"boolean\"},\n                \"recurring_uuid\": {\"type\": [\"null\", \"string\"]},\n                \"service\": {\"type\": [\"null\", \"number\"]}\n            },\n            \"required\": [\"appointment_id\", \"checked_in_time\", \"citizen_name\", \"comments\",\n                         \"contact_information\", \"end_time\", \"office\", \"office_id\", \"service_id\",\n                         \"start_time\", \"blackout_flag\", \"citizen_id\", \"online_flag\",\n                         \"recurring_uuid\", \"service\"],\n        },\n        \"errors\": {\"type\": [\"object\", \"string\"]}\n    },\n    \"required\": [\"appointment\", \"errors\"],\n};\n\n//Test to see if response schema is valid\npm.test(\"Validate Response Appointments Schema\", function(){\n    pm.expect(tv4.validate(jsonData, appointmentSchema)).to.be.true;\n});\n"
 						},
 						"url": {
 							"raw": "https://postman-echo.com/post",
@@ -11129,7 +11129,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "//  Make sure that jsonData has an appointment property.\npm.test(\"Response should have appointment property\", function(){\n    pm.expect(jsonData.hasOwnProperty(\"appointment\")).to.be.true;\n});\n\n//  If jsonData has booking property, check data.\nif (jsonData.hasOwnProperty(\"appointment\")) {\n\n    //Test to see if service id has expected value\n    pm.test(\"Validate Service ID has expected value\", function(){\n        pm.expect(jsonData.service_id === environment.service_id);\n    });\n\n    //Test to see if office id has expected value\n    pm.test(\"Validate office id has expected value\", function(){\n        pm.expect(jsonData.office_id === environment.current_office_id);\n    });\n\n    //Test to see if start time has expected value\n    pm.test(\"Validate start time has expected value\", function(){\n        pm.expect(jsonData.start_time === environment.start_time);\n    });\n\n    //Test to see if end time has expected value\n    pm.test(\"Validate end time has expected value\", function(){\n        pm.expect(jsonData.end_time === environment.end_time);\n    });\n\n    //Test to see if category has expected value\n    pm.test(\"Validate category has expected value\", function(){\n        pm.expect(jsonData.category === environment.category);\n    });\n\n    //Test to see if comments field has expected value\n    pm.test(\"Validate comments has expected value\", function(){\n        pm.expect(jsonData.comments === environment.comments);\n    });\n\n    //Test to see if citizen name field has expected value\n    pm.test(\"Validate citizen name has expected value\", function(){\n        pm.expect(jsonData.citizen_name === environment.citizne_name);\n    });\n}\n"
+							"raw": "//  Make sure that jsonData has an appointment property.\npm.test(\"Response should have appointment property\", function(){\n    pm.expect(jsonData.hasOwnProperty(\"appointment\")).to.be.true;\n});\n\nvar name = jsonData.appointment.citizen_name;\nvar comments = jsonData.appointment.comments;\nvar contact = jsonData.appointment.contact_information;\nvar name_expect = JSON.parse(pm.globals.get(\"appt_citizen_name\"));\nvar comments_expect = JSON.parse(pm.globals.get(\"appt_comments\"));\nvar contact_expect = JSON.parse(pm.globals.get(\"appt_contact_information\"));\n\n//  If jsonData has booking property, check data.\nif (jsonData.hasOwnProperty(\"appointment\")) {\n\n    //Test to see if service id has expected value\n    pm.test(\"Validate Service ID has expected value\", function(){\n        pm.expect(jsonData.service_id === environment.service_id);\n    });\n\n    //Test to see if office id has expected value\n    pm.test(\"Validate office id has expected value\", function(){\n        pm.expect(jsonData.office_id === environment.current_office_id);\n    });\n\n    //Test to see if start time has expected value\n    pm.test(\"Validate start time has expected value\", function(){\n        pm.expect(jsonData.start_time === environment.start_time);\n    });\n\n    //Test to see if end time has expected value\n    pm.test(\"Validate end time has expected value\", function(){\n        pm.expect(jsonData.end_time === environment.end_time);\n    });\n\n    //Test to see if category has expected value\n    pm.test(\"Validate category has expected value\", function(){\n        pm.expect(jsonData.category === environment.category);\n    });\n\n    //Test to see if citizen name field has expected value\n    pm.test(\"Name should be '\" + name_expect + \"', it is '\" + name + \"'\", function(){\n        pm.expect(name).to.be.eql(name_expect);\n    });\n    //Test to see if comments field has expected value\n    pm.test(\"Comments should be '\" + comments_expect + \"'; it is '\" + comments +\"'\", function(){\n        pm.expect(comments).to.be.eql(comments_expect);\n    });\n    //Test to see if contact info field has expected value\n    pm.test(\"Contact should be '\" + contact_expect + \"'; it is '\" + contact +\"'\", function(){\n        pm.expect(contact).to.be.eql(contact_expect);\n    });\n};\n"
 						},
 						"url": {
 							"raw": "https://postman-echo.com/post",
@@ -11166,7 +11166,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "// Define the JSON Schema expected in response\nvar appointmentSchema = {\n    \"type\": \"object\", \n    \"properties\": {\n        \"appointments\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"appointment_id\": {\"type\": \"number\"},\n                    \"checked_in_time\": {\"type\": [\"string\", \"null\"]},\n                    \"citizen_name\": {\"type\": \"string\"},\n                    \"comments\": {\"type\": \"string\"},\n                    \"contact_information\": {\"type\": [\"null\", \"string\"]},\n                    \"end_time\": {\"type\": \"string\"},\n                    \"office\": {\"type\": \"number\"},\n                    \"office_id\": {\"type\": \"number\"},\n                    \"service_id\": {\"type\": \"number\"},\n                    \"start_time\": {\"type\": \"string\"},\n                    \"blackout_flag\": {\"type\": \"string\"},\n                    \"citizen_id\": {\"type\": \"number\"},\n                    \"online_flag\": {\"type\": \"boolean\"},\n                    \"recurring_uuid\": {\"type\": [\"null\", \"string\"]},\n                    \"service\": {\"type\": \"number\"}\n                },\n                \"required\": [\"appointment_id\", \"checked_in_time\", \"citizen_name\", \"comments\",\n                             \"contact_information\", \"end_time\", \"office\", \"office_id\",\n                             \"service_id\", \"start_time\", \"blackout_flag\", \"citizen_id\",\n                             \"online_flag\", \"recurring_uuid\", \"service\"]\n            }\n        },\n        \"errors\": {\"type\": [\"object\", \"string\"]}\n    },\n    \"required\": [\"appointments\", \"errors\"],\n};\n\n//Test to see if response schema is valid\npm.test(\"Validate Response Appointment List Schema\", function(){\n    pm.expect(tv4.validate(jsonData, appointmentSchema)).to.be.true;\n});\n"
+							"raw": "// Define the JSON Schema expected in response\nvar appointmentSchema = {\n    \"type\": \"object\", \n    \"properties\": {\n        \"appointments\": {\n            \"type\": \"array\",\n            \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"appointment_id\": {\"type\": \"number\"},\n                    \"checked_in_time\": {\"type\": [\"string\", \"null\"]},\n                    \"citizen_name\": {\"type\": \"string\"},\n                    \"comments\": {\"type\": \"string\"},\n                    \"contact_information\": {\"type\": [\"null\", \"string\"]},\n                    \"end_time\": {\"type\": \"string\"},\n                    \"office\": {\"type\": \"number\"},\n                    \"office_id\": {\"type\": \"number\"},\n                    \"service_id\": {\"type\": [\"null\", \"number\"]},\n                    \"start_time\": {\"type\": \"string\"},\n                    \"blackout_flag\": {\"type\": \"string\"},\n                    \"citizen_id\": {\"type\": \"number\"},\n                    \"online_flag\": {\"type\": \"boolean\"},\n                    \"recurring_uuid\": {\"type\": [\"null\", \"string\"]},\n                    \"service\": {\"type\": [\"null\", \"number\"]}\n                },\n                \"required\": [\"appointment_id\", \"checked_in_time\", \"citizen_name\", \"comments\",\n                             \"contact_information\", \"end_time\", \"office\", \"office_id\",\n                             \"service_id\", \"start_time\", \"blackout_flag\", \"citizen_id\",\n                             \"online_flag\", \"recurring_uuid\", \"service\"]\n            }\n        },\n        \"errors\": {\"type\": [\"object\", \"string\"]}\n    },\n    \"required\": [\"appointments\"],\n};\n\n//Test to see if response schema is valid\npm.test(\"Validate Response Appointment List Schema\", function(){\n    pm.expect(tv4.validate(jsonData, appointmentSchema)).to.be.true;\n});\n"
 						},
 						"url": {
 							"raw": "https://postman-echo.com/post",
@@ -14418,9 +14418,10 @@
 									"pm.globals.set(\"start_time\", JSON.stringify(start_time));",
 									"pm.globals.set(\"end_time\", JSON.stringify(end_time));",
 									"pm.globals.set(\"category\", JSON.stringify(\"Exam\"));",
-									"pm.globals.set(\"comments\", JSON.stringify(\"Missed playoffs, needs to talk #1.\"));",
-									"pm.globals.set(\"citizen_name\", JSON.stringify(\"LeBron James Appointment #1\"));",
 									"pm.globals.set(\"service_id\", pm.environment.get(\"service_PropTax_id\"));",
+									"pm.globals.set(\"appt_comments\", JSON.stringify(\"Missed playoffs, needs to talk #1.\"));",
+									"pm.globals.set(\"appt_citizen_name\", JSON.stringify(\"LeBron James Appointment #1\"));",
+									"pm.globals.set(\"appt_contact_information\", JSON.stringify(\"My contact info\"));",
 									""
 								],
 								"type": "text/javascript"
@@ -14449,7 +14450,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n \"service_id\": {{service_id}},\n \"office_id\" : {{current_office_id}},\n \"start_time\": {{start_time}},\n \"end_time\": {{end_time}},\n \"category\": {{category}},\n \"comments\": {{comments}},\n \"citizen_name\": {{citizen_name}}\n}"
+							"raw": "{\n \"service_id\": {{service_id}},\n \"office_id\" : {{current_office_id}},\n \"start_time\": {{start_time}},\n \"end_time\": {{end_time}},\n \"category\": {{category}},\n \"comments\": {{appt_comments}},\n \"citizen_name\": {{appt_citizen_name}},\n \"contact_information\": {{appt_contact_information}}\n}"
 						},
 						"url": {
 							"raw": "{{url}}appointments/",
@@ -14609,7 +14610,7 @@
 									"",
 									"pm.globals.set(\"start_time\", JSON.stringify(start_time));",
 									"pm.globals.set(\"end_time\", JSON.stringify(end_time));",
-									"pm.globals.set(\"comments\", JSON.stringify(\"super EARLY\"));"
+									"pm.globals.set(\"appt_comments\", JSON.stringify(\"super EARLY\"));"
 								],
 								"type": "text/javascript"
 							}
@@ -14767,9 +14768,10 @@
 									"pm.globals.set(\"start_time\", JSON.stringify(start_time));",
 									"pm.globals.set(\"end_time\", JSON.stringify(end_time));",
 									"pm.globals.set(\"category\", JSON.stringify(\"Exam\"));",
-									"pm.globals.set(\"comments\", JSON.stringify(\"Missed playoffs, needs to talk #1.\"));",
-									"pm.globals.set(\"citizen_name\", JSON.stringify(\"LeBron James Appointment #1\"));",
 									"pm.globals.set(\"service_id\", pm.environment.get(\"service_PropTax_id\"));",
+									"pm.globals.set(\"appt_citizen_name\", JSON.stringify(\"BLACKOUT PERIOD\"));",
+									"pm.globals.set(\"appt_comments\", JSON.stringify(\"Office needs a break\"));",
+									"pm.globals.set(\"appt_contact_information\", JSON.stringify(\"Contact info, me@me.com\"));",
 									""
 								],
 								"type": "text/javascript"
@@ -14798,7 +14800,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n \"blackout_flag\" : \"Y\",\n \"citizen_name\" : \"BLACKOUT PERIOD\",\n \"comments\" : \"Blackout comments\",\n \"contact_information\" : \"Postman operator\",\n \"start_time\": {{start_time}},\n \"end_time\": {{end_time}},\n \"office_id\" : {{current_office_id}},\n \"recurring_uuid\": {{pm_appt_uuid}}\n}"
+							"raw": "{\n \"blackout_flag\" : \"Y\",\n \"citizen_name\" : {{appt_citizen_name}},\n \"comments\" : {{appt_comments}},\n \"contact_information\" : {{appt_contact_information}},\n \"start_time\": {{start_time}},\n \"end_time\": {{end_time}},\n \"office_id\" : {{current_office_id}},\n \"recurring_uuid\": {{pm_appt_uuid}}\n}"
 						},
 						"url": {
 							"raw": "{{url}}appointments/",
@@ -14866,10 +14868,6 @@
 									"",
 									"pm.globals.set(\"start_time\", JSON.stringify(start_time));",
 									"pm.globals.set(\"end_time\", JSON.stringify(end_time));",
-									"pm.globals.set(\"category\", JSON.stringify(\"Exam\"));",
-									"pm.globals.set(\"comments\", JSON.stringify(\"Missed playoffs, needs to talk #1.\"));",
-									"pm.globals.set(\"citizen_name\", JSON.stringify(\"LeBron James Appointment #1\"));",
-									"pm.globals.set(\"service_id\", pm.environment.get(\"service_PropTax_id\"));",
 									""
 								],
 								"type": "text/javascript"
@@ -14898,7 +14896,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n \"blackout_flag\" : \"Y\",\n \"citizen_name\" : \"BLACKOUT PERIOD\",\n \"comments\" : \"Blackout comments\",\n \"contact_information\" : \"Postman operator\",\n \"start_time\": {{start_time}},\n \"end_time\": {{end_time}},\n \"office_id\" : {{current_office_id}},\n \"recurring_uuid\": {{pm_appt_uuid}}\n}"
+							"raw": "{\n \"blackout_flag\" : \"Y\",\n \"citizen_name\" : {{appt_citizen_name}},\n \"comments\" : {{appt_comments}},\n \"contact_information\" : {{appt_contact_information}},\n \"start_time\": {{start_time}},\n \"end_time\": {{end_time}},\n \"office_id\" : {{current_office_id}},\n \"recurring_uuid\": {{pm_appt_uuid}}\n}"
 						},
 						"url": {
 							"raw": "{{url}}appointments/",
@@ -14966,10 +14964,6 @@
 									"",
 									"pm.globals.set(\"start_time\", JSON.stringify(start_time));",
 									"pm.globals.set(\"end_time\", JSON.stringify(end_time));",
-									"pm.globals.set(\"category\", JSON.stringify(\"Exam\"));",
-									"pm.globals.set(\"comments\", JSON.stringify(\"Missed playoffs, needs to talk #1.\"));",
-									"pm.globals.set(\"citizen_name\", JSON.stringify(\"LeBron James Appointment #1\"));",
-									"pm.globals.set(\"service_id\", pm.environment.get(\"service_PropTax_id\"));",
 									""
 								],
 								"type": "text/javascript"
@@ -14998,7 +14992,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n \"blackout_flag\" : \"Y\",\n \"citizen_name\" : \"BLACKOUT PERIOD\",\n \"comments\" : \"Blackout comments\",\n \"contact_information\" : \"Postman operator\",\n \"start_time\": {{start_time}},\n \"end_time\": {{end_time}},\n \"office_id\" : {{current_office_id}},\n \"recurring_uuid\": {{pm_appt_uuid}}\n}"
+							"raw": "{\n \"blackout_flag\" : \"Y\",\n \"citizen_name\" : {{appt_citizen_name}},\n \"comments\" : {{appt_comments}},\n \"contact_information\" : {{appt_contact_information}},\n \"start_time\": {{start_time}},\n \"end_time\": {{end_time}},\n \"office_id\" : {{current_office_id}},\n \"recurring_uuid\": {{pm_appt_uuid}}\n}"
 						},
 						"url": {
 							"raw": "{{url}}appointments/",
@@ -15006,6 +15000,153 @@
 								"{{url}}appointments"
 							],
 							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check first appointment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b6e87181-0a95-408d-8744-a801e81ba00a",
+								"exec": [
+									"//  Run basic response tests.",
+									"eval(environment.basic_response_test);",
+									"",
+									"// Parse response body",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//Test to see if response schema is valid",
+									"eval(environment.appointment_schema_check);",
+									"eval(environment.appointment_data_check);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}appointments/{{appointment_id}}/",
+							"host": [
+								"{{url}}appointments"
+							],
+							"path": [
+								"{{appointment_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check second appointment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f1e5795b-89fc-4416-8cb8-09687c70d005",
+								"exec": [
+									"//  Run basic response tests.",
+									"eval(environment.basic_response_test);",
+									"",
+									"// Parse response body",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//Test to see if response schema is valid",
+									"eval(environment.appointment_schema_check);",
+									"eval(environment.appointment_data_check);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}appointments/{{second_appt_id}}/",
+							"host": [
+								"{{url}}appointments"
+							],
+							"path": [
+								"{{second_appt_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check third appointment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cef5adf5-7912-4166-9327-2ee5602d2f20",
+								"exec": [
+									"//  Run basic response tests.",
+									"eval(environment.basic_response_test);",
+									"",
+									"// Parse response body",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//Test to see if response schema is valid",
+									"eval(environment.appointment_schema_check);",
+									"eval(environment.appointment_data_check);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}appointments/{{third_appt_id}}/",
+							"host": [
+								"{{url}}appointments"
+							],
+							"path": [
+								"{{third_appt_id}}",
 								""
 							]
 						}
@@ -15062,7 +15203,11 @@
 									"",
 									"pm.globals.set(\"start_time\", JSON.stringify(start_time));",
 									"pm.globals.set(\"end_time\", JSON.stringify(end_time));",
-									"pm.globals.set(\"comments\", JSON.stringify(\"super EARLY\"));"
+									"",
+									"pm.globals.set(\"appt_citizen_name\", JSON.stringify(\"BLACKOUT UPDATE 2nd\"));",
+									"pm.globals.set(\"appt_comments\", JSON.stringify(\"Update blackout comments\"));",
+									"pm.globals.set(\"appt_contact_information\", JSON.stringify(\"Update blackout contact\"));",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -15090,7 +15235,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n \"citizen_name\" : \"BLACKOUT UPDATE\",\n \"comments\" : \"Blackout comments update\",\n \"contact_information\" : \"Postman contact update\"\n}"
+							"raw": "{\n \"citizen_name\" : {{appt_citizen_name}},\n \"comments\" : {{appt_comments}},\n \"contact_information\" : {{appt_contact_information}}\n}"
 						},
 						"url": {
 							"raw": "{{url}}appointments/{{second_appt_id}}/",
@@ -15106,7 +15251,7 @@
 					"response": []
 				},
 				{
-					"name": "Check first appointment",
+					"name": "Check second appointment again",
 					"event": [
 						{
 							"listen": "test",
@@ -15122,20 +15267,69 @@
 									"//Test to see if response schema is valid",
 									"eval(environment.appointment_schema_check);",
 									"eval(environment.appointment_data_check);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}appointments/{{second_appt_id}}/",
+							"host": [
+								"{{url}}appointments"
+							],
+							"path": [
+								"{{second_appt_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check first appointment again",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4dbacbaa-5adb-46dc-9cfc-12c03825e5f4",
+								"exec": [
+									"//  Run basic response tests.",
+									"eval(environment.basic_response_test);",
 									"",
-									"//  Get booking data.",
-									"var name = jsonData.booking.citizen_name;",
-									"var comments = jsonData.booking.comments;",
-									"var contact_information = jsonData.booking.comments;",
-									"var name_expect = \"BLACKOUT PERIOD\";",
-									"var comments_expect = \"Blackout comments\";",
-									"var contact_expect = \"Postman operator\";",
+									"// Parse response body",
+									"var jsonData = JSON.parse(responseBody);",
 									"",
-									"//  Make sure data for the first booking hasn't changed.",
-									"pm.test(\"Name should be '\" + name_expect + \"'; it is '\" + name + \"'\", function () {",
-									"    pm.expect(name).to.be.eql(name_expect);",
-									"});",
-									"",
+									"//Test to see if response schema is valid",
+									"eval(environment.appointment_schema_check);",
+									"eval(environment.appointment_data_check);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ab7b7714-5e70-411e-b374-335281846843",
+								"exec": [
+									"//  Reset variables back to their first and third appt values.\r",
+									"pm.globals.set(\"appt_citizen_name\", JSON.stringify(\"BLACKOUT PERIOD\"));\r",
+									"pm.globals.set(\"appt_comments\", JSON.stringify(\"Office needs a break\"));\r",
+									"pm.globals.set(\"appt_contact_information\", JSON.stringify(\"Contact info, me@me.com\"));\r",
 									""
 								],
 								"type": "text/javascript"
@@ -15169,6 +15363,55 @@
 					"response": []
 				},
 				{
+					"name": "Check third appointment again",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2ed7e0a4-88cb-4a7f-8ec3-b82e057b3d07",
+								"exec": [
+									"//  Run basic response tests.",
+									"eval(environment.basic_response_test);",
+									"",
+									"// Parse response body",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//Test to see if response schema is valid",
+									"eval(environment.appointment_schema_check);",
+									"eval(environment.appointment_data_check);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}appointments/{{third_appt_id}}/",
+							"host": [
+								"{{url}}appointments"
+							],
+							"path": [
+								"{{third_appt_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update all appointments",
 					"event": [
 						{
@@ -15190,9 +15433,20 @@
 									"// Parse response body",
 									"var jsonData = JSON.parse(responseBody);",
 									"",
+									"// Define the JSON Schema expected in response",
+									"var apptAllSchema = {",
+									"    \"type\": \"object\", ",
+									"    \"properties\": {",
+									"        \"appointments\": {\"type\": \"object\"},",
+									"        \"errors\": {\"type\": [\"object\", \"string\"]}",
+									"    },",
+									"    \"required\": [\"appointments\", \"errors\"],",
+									"};",
+									"",
 									"//Test to see if response schema is valid",
-									"eval(environment.appointment_schema_check);",
-									"eval(environment.appointment_data_check);",
+									"pm.test(\"Validate Recurring Appointments Schema\", function(){",
+									"    pm.expect(tv4.validate(jsonData, apptAllSchema)).to.be.true;",
+									"});",
 									""
 								],
 								"type": "text/javascript"
@@ -15208,11 +15462,12 @@
 									"later.setDate(later.getDate()+7);",
 									"",
 									"//  Print out the appointment ID.",
-									"console.log(\"Recurring appointment uuid:\");",
-									"console.log(pm.globals.get(\"pm_appt_uuid\"));",
 									"pm_url_uuid = JSON.parse(pm.globals.get(\"pm_appt_uuid\"))",
-									"console.log(pm_url_uuid);",
 									"pm.globals.set(\"pm_url_uuid\", pm_url_uuid);",
+									"",
+									"pm.globals.set(\"appt_citizen_name\", JSON.stringify(\"BLACKOUT ALL UPDATE\"));",
+									"pm.globals.set(\"appt_comments\", JSON.stringify(\"All blackout comments\"));",
+									"pm.globals.set(\"appt_contact_information\", JSON.stringify(\"All Update blackout contacts\"));",
 									""
 								],
 								"type": "text/javascript"
@@ -15241,7 +15496,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n \"citizen_name\" : \"BLACKOUT UPDATE ALL\",\n \"comments\" : \"Blackout comments all update\",\n \"contact_information\" : \"Postman all contacts\"\n}"
+							"raw": "{\n \"citizen_name\" : {{appt_citizen_name}},\n \"comments\" : {{appt_comments}},\n \"contact_information\" : {{appt_contact_information}}\n}"
 						},
 						"url": {
 							"raw": "{{url}}appointments/recurring/{{pm_url_uuid}}",
@@ -15251,6 +15506,153 @@
 							"path": [
 								"recurring",
 								"{{pm_url_uuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check first appointment all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "dce46fbd-139c-4632-96ed-5a4ebd35e3fb",
+								"exec": [
+									"//  Run basic response tests.",
+									"eval(environment.basic_response_test);",
+									"",
+									"// Parse response body",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//Test to see if response schema is valid",
+									"eval(environment.appointment_schema_check);",
+									"eval(environment.appointment_data_check);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}appointments/{{appointment_id}}/",
+							"host": [
+								"{{url}}appointments"
+							],
+							"path": [
+								"{{appointment_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check second appointment all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "de36ec54-f328-47d4-9afc-e5c9889c895b",
+								"exec": [
+									"//  Run basic response tests.",
+									"eval(environment.basic_response_test);",
+									"",
+									"// Parse response body",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//Test to see if response schema is valid",
+									"eval(environment.appointment_schema_check);",
+									"eval(environment.appointment_data_check);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}appointments/{{second_appt_id}}/",
+							"host": [
+								"{{url}}appointments"
+							],
+							"path": [
+								"{{second_appt_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check third appointment all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4160d563-0c6e-4a67-ab99-2dc852c7298b",
+								"exec": [
+									"//  Run basic response tests.",
+									"eval(environment.basic_response_test);",
+									"",
+									"// Parse response body",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"//Test to see if response schema is valid",
+									"eval(environment.appointment_schema_check);",
+									"eval(environment.appointment_data_check);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}appointments/{{appointment_id}}/",
+							"host": [
+								"{{url}}appointments"
+							],
+							"path": [
+								"{{appointment_id}}",
+								""
 							]
 						}
 					},
@@ -15335,14 +15737,43 @@
 									"    pm.expect(pm.response.responseTime).to.be.below(response_max);",
 									"});",
 									"",
-									"",
 									"// Parse response body",
 									"var jsonData = JSON.parse(responseBody);",
 									"",
+									"var allSchema = {",
+									"    \"type\": \"array\",",
+									"    \"items\": {\"type\": \"object\"}",
+									"};",
 									"",
-									"var user_id = jsonData[0].user_id;",
+									"//Test to see if response schema is valid",
+									"pm.test(\"Validate All Users Schema\", function(){",
+									"    pm.expect(tv4.validate(jsonData, allSchema)).to.be.true;",
+									"});",
+									"",
+									"var firstUser = jsonData[0];",
+									"",
+									"var userSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"email\": {\"type\": \"string\"},",
+									"        \"last_name\": {\"type\": \"string\"},",
+									"        \"user_id\": {\"type\": \"number\"},",
+									"        \"username\": {\"type\": \"string\"},",
+									"        \"send_reminders\": {\"type\": \"boolean\"},",
+									"        \"display_name\": {\"type\": \"string\"},",
+									"        \"telephone\": {\"type\": \"string\"}",
+									"    },",
+									"    \"required\": [\"email\", \"last_name\", \"user_id\", \"username\", \"send_reminders\",",
+									"                 \"display_name\", \"telephone\"]",
+									"};",
+									"",
+									"//Test to see if response schema is valid",
+									"pm.test(\"Validate First User Schema\", function(){",
+									"    pm.expect(tv4.validate(firstUser, userSchema)).to.be.true;",
+									"});",
 									"",
 									"//Dynamic variable used for end-point testing later on",
+									"var user_id = firstUser.user_id;",
 									"postman.setEnvironmentVariable(\"user_id\", JSON.stringify(user_id));",
 									""
 								],
@@ -15443,9 +15874,10 @@
 									"pm.globals.set(\"public_start_time\", JSON.stringify(start_time));",
 									"pm.globals.set(\"public_end_time\", JSON.stringify(end_time));",
 									"pm.globals.set(\"category\", JSON.stringify(\"Exam\"));",
-									"pm.globals.set(\"comments\", JSON.stringify(\"Missed playoffs, needs to talk #1.\"));",
-									"pm.globals.set(\"citizen_name\", JSON.stringify(\"LeBron James Appointment #1\"));",
 									"pm.globals.set(\"service_id\", pm.environment.get(\"service_PropTax_id\"));",
+									"pm.globals.set(\"appt_comments\", JSON.stringify(\"Self serve appt. Phone: 7787777777\"));",
+									"pm.globals.set(\"appt_citizen_name\", JSON.stringify(\"cfms-postman-public-user\"));",
+									"pm.globals.set(\"appt_contact_information\", JSON.stringify(\"test@test.com\"));",
 									""
 								],
 								"type": "text/javascript"
@@ -15474,7 +15906,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n \"service_id\": {{service_id}},\n \"office_id\" : {{current_office_id}},\n \"start_time\": {{public_start_time}},\n \"end_time\": {{public_end_time}},\n \"category\": {{category}},\n \"comments\": {{comments}}\n}"
+							"raw": "{\n \"service_id\": {{service_id}},\n \"office_id\" : {{current_office_id}},\n \"start_time\": {{public_start_time}},\n \"end_time\": {{public_end_time}},\n \"category\": {{category}},\n \"comments\": {{appt_comments}},\n \"citizen_name\": {{appt_citizen_name}},\n \"contact_information\": {{appt_contact_information}}\n}"
 						},
 						"url": {
 							"raw": "{{public_url}}appointments/",
@@ -15505,6 +15937,41 @@
 									"var response_max = JSON.parse(globals.response_max);",
 									"pm.test(\"Response time less than \" + response_max.toString() + \"ms\", function(){",
 									"    pm.expect(pm.response.responseTime).to.be.below(response_max);",
+									"});",
+									"",
+									"// Parse response body",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var allSchema = {",
+									"    \"type\": \"array\",",
+									"    \"items\": {\"type\": \"object\"}",
+									"};",
+									"",
+									"//Test to see if response schema is valid",
+									"pm.test(\"Validate All Users Schema\", function(){",
+									"    pm.expect(tv4.validate(jsonData, allSchema)).to.be.true;",
+									"});",
+									"",
+									"var firstUser = jsonData[0];",
+									"",
+									"var userSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"email\": {\"type\": \"string\"},",
+									"        \"last_name\": {\"type\": \"string\"},",
+									"        \"user_id\": {\"type\": \"number\"},",
+									"        \"username\": {\"type\": \"string\"},",
+									"        \"send_reminders\": {\"type\": \"boolean\"},",
+									"        \"display_name\": {\"type\": \"string\"},",
+									"        \"telephone\": {\"type\": \"string\"}",
+									"    },",
+									"    \"required\": [\"email\", \"last_name\", \"user_id\", \"username\", \"send_reminders\",",
+									"                 \"display_name\", \"telephone\"]",
+									"};",
+									"",
+									"//Test to see if response schema is valid",
+									"pm.test(\"Validate First User Schema\", function(){",
+									"    pm.expect(tv4.validate(firstUser, userSchema)).to.be.true;",
 									"});",
 									""
 								],
@@ -15565,6 +16032,41 @@
 									"var response_max = JSON.parse(globals.response_max);",
 									"pm.test(\"Response time less than \" + response_max.toString() + \"ms\", function(){",
 									"    pm.expect(pm.response.responseTime).to.be.below(response_max);",
+									"});",
+									"",
+									"// Parse response body",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var allSchema = {",
+									"    \"type\": \"array\",",
+									"    \"items\": {\"type\": \"object\"}",
+									"};",
+									"",
+									"//Test to see if response schema is valid",
+									"pm.test(\"Validate All Users Schema\", function(){",
+									"    pm.expect(tv4.validate(jsonData, allSchema)).to.be.true;",
+									"});",
+									"",
+									"var firstUser = jsonData[0];",
+									"",
+									"var userSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"email\": {\"type\": \"string\"},",
+									"        \"last_name\": {\"type\": \"string\"},",
+									"        \"user_id\": {\"type\": \"number\"},",
+									"        \"username\": {\"type\": \"string\"},",
+									"        \"send_reminders\": {\"type\": \"boolean\"},",
+									"        \"display_name\": {\"type\": \"string\"},",
+									"        \"telephone\": {\"type\": \"string\"}",
+									"    },",
+									"    \"required\": [\"email\", \"last_name\", \"user_id\", \"username\", \"send_reminders\",",
+									"                 \"display_name\", \"telephone\"]",
+									"};",
+									"",
+									"//Test to see if response schema is valid",
+									"pm.test(\"Validate First User Schema\", function(){",
+									"    pm.expect(tv4.validate(firstUser, userSchema)).to.be.true;",
 									"});",
 									""
 								],
